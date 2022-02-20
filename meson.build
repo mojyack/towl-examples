@@ -2,6 +2,9 @@ project('towl-examples', 'cpp', version : '1.0.0', default_options : ['warning_l
 
 subdir('src')
 
-towl = dependency('towl', version : ['>=1.0.1', '<1.1'])
+towl   = dependency('towl', version : ['>=1.0.1', '<1.1'])
+egl    = dependency('egl')
+opengl = dependency('opengl')
 
 executable('shm-window', [shm_window_files], dependencies : [towl])
+executable('egl-window', [egl_window_files], dependencies : [towl, egl, opengl])

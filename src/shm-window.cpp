@@ -8,6 +8,7 @@ using Compositor = towl::Compositor<4>;
 using WMBase     = towl::WMBase<2>;
 using Shm        = towl::Shm<1>;
 
+// dummy
 struct GlueParameterPack {
     std::tuple<> value;
 };
@@ -70,9 +71,9 @@ auto main() -> int {
 
     // create image with shm
     auto& shm   = registry.interface<Shm>()[0];
-    auto  image = Image(shm, shm_handle, 100, 100);
+    auto  image = Image(shm, shm_handle, 800, 600);
 
-    // process configure events before attaching buffer
+    // process configure events before drawing anything
     display.roundtrip();
 
     // draw image and commit
