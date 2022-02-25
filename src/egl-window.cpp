@@ -10,11 +10,6 @@
 using Compositor = towl::Compositor<4>;
 using WMBase     = towl::WMBase<2>;
 
-// dummy
-struct GlueParameterPack {
-    std::tuple<> value;
-};
-
 struct EGLObject {
     EGLDisplay display = nullptr;
     EGLConfig  config  = nullptr;
@@ -58,7 +53,7 @@ auto main() -> int {
     auto display = towl::Display();
 
     // bind interfaces
-    auto registry = display.get_registry<GlueParameterPack, Compositor, WMBase>({});
+    auto registry = display.get_registry<towl::Empty, Compositor, WMBase>({});
     display.roundtrip();
     dynamic_assert(!registry.interface<Compositor>().empty() && !registry.interface<WMBase>().empty(), "wayland server doesn't provide necessary interfaces");
 

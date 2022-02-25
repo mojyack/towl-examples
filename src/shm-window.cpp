@@ -8,11 +8,6 @@ using Compositor = towl::Compositor<4>;
 using WMBase     = towl::WMBase<2>;
 using Shm        = towl::Shm<1>;
 
-// dummy
-struct GlueParameterPack {
-    std::tuple<> value;
-};
-
 struct Image {
     const size_t size;
     const size_t width;
@@ -47,7 +42,7 @@ auto main() -> int {
     auto display = towl::Display();
 
     // bind interfaces
-    auto registry = display.get_registry<GlueParameterPack, Compositor, WMBase, Shm>({});
+    auto registry = display.get_registry<towl::Empty, Compositor, WMBase, Shm>({});
     display.roundtrip();
     dynamic_assert(!registry.interface<Compositor>().empty() && !registry.interface<WMBase>().empty() && !registry.interface<Shm>().empty(), "wayland server doesn't provide necessary interfaces");
 
