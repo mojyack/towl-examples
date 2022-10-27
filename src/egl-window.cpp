@@ -14,6 +14,7 @@ struct EGLObject {
     EGLDisplay display = nullptr;
     EGLConfig  config  = nullptr;
     EGLContext context = nullptr;
+
     EGLObject(towl::Display& wl_display) {
         display = eglGetDisplay(wl_display.native());
         dynamic_assert(display != EGL_NO_DISPLAY);
@@ -42,6 +43,7 @@ struct EGLObject {
         context = eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribs.data());
         dynamic_assert(context != EGL_NO_CONTEXT);
     }
+
     ~EGLObject() {
         dynamic_assert(eglDestroyContext(display, context) != EGL_FALSE);
         dynamic_assert(eglTerminate(display) != EGL_FALSE);

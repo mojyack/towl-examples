@@ -23,6 +23,7 @@ struct Image {
             }
         }
     }
+
     Image(Shm& shm, const FileDescriptor& unix_shm, const size_t width, const size_t height) : size(width * height * 4),
                                                                                                width(width),
                                                                                                height(height),
@@ -32,6 +33,7 @@ struct Image {
         dynamic_assert(data != MAP_FILE);
         dynamic_assert(ftruncate(unix_shm.as_handle(), size) >= 0);
     }
+
     ~Image() {
         munmap(data, size);
     }
