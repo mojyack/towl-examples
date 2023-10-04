@@ -2,7 +2,7 @@ project('towl-examples', 'cpp', version : '1.0.0', default_options : ['warning_l
 
 subdir('src')
 
-towl   = dependency('towl', version : ['>=1.0', '<1.1'])
+towl   = dependency('towl', version : ['>=1.2', '<1.3'])
 egl    = dependency('egl')
 opengl = dependency('opengl')
 

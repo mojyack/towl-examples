@@ -24,10 +24,10 @@ struct Image {
         }
     }
 
-    Image(Shm& shm, const FileDescriptor& unix_shm, const size_t width, const size_t height) : size(width * height * 4),
+    Image(Shm* shm, const FileDescriptor& unix_shm, const size_t width, const size_t height) : size(width * height * 4),
                                                                                                width(width),
                                                                                                height(height),
-                                                                                               pool(shm.create_shm_pool(unix_shm.as_handle(), size)),
+                                                                                               pool(shm->create_shm_pool(unix_shm.as_handle(), size)),
                                                                                                buffer(pool.create_buffer(0, width, height, width * 4, WL_SHM_FORMAT_ARGB8888)),
                                                                                                data(static_cast<uint8_t*>(mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, unix_shm.as_handle(), 0))) {
         dynamic_assert(data != MAP_FILE);
@@ -49,13 +49,13 @@ auto main() -> int {
     dynamic_assert(!registry.interface<Compositor>().empty() && !registry.interface<WMBase>().empty() && !registry.interface<Shm>().empty(), "wayland server doesn't provide necessary interfaces");
 
     // get surface from compositor
-    auto& compositor = registry.interface<Compositor>()[0];
-    auto  surface    = compositor.create_surface(towl::Empty{});
+    auto compositor = registry.interface<Compositor>()[0].get();
+    auto surface    = compositor->create_surface(towl::Empty{});
 
     // create xdg_surface and xdg_toplevel
-    auto& wmbase       = registry.interface<WMBase>()[0];
-    auto  xdg_surface  = wmbase.create_xdg_surface(surface);
-    auto  xdg_toplevel = xdg_surface.create_xdg_toplevel(towl::Empty{});
+    auto wmbase       = registry.interface<WMBase>()[0].get();
+    auto xdg_surface  = wmbase->create_xdg_surface(surface);
+    auto xdg_toplevel = xdg_surface.create_xdg_toplevel(towl::Empty{});
 
     // then commit surface changes
     surface.commit();
@@ -67,8 +67,8 @@ auto main() -> int {
     shm_unlink(shm_name);
 
     // create image with shm
-    auto& shm   = registry.interface<Shm>()[0];
-    auto  image = Image(shm, shm_handle, 800, 600);
+    auto shm   = registry.interface<Shm>()[0].get();
+    auto image = Image(shm, shm_handle, 800, 600);
 
     // process configure events before drawing anything
     display.roundtrip();

@@ -63,13 +63,13 @@ auto main() -> int {
     auto egl = EGLObject(display);
 
     // get surface from compositor
-    auto& compositor = registry.interface<Compositor>()[0];
-    auto  surface    = compositor.create_surface(towl::Empty{});
+    auto compositor = registry.interface<Compositor>()[0].get();
+    auto surface    = compositor->create_surface(towl::Empty{});
 
     // create xdg_surface and xdg_toplevel
-    auto& wmbase       = registry.interface<WMBase>()[0];
-    auto  xdg_surface  = wmbase.create_xdg_surface(surface);
-    auto  xdg_toplevel = xdg_surface.create_xdg_toplevel(towl::Empty{});
+    auto wmbase       = registry.interface<WMBase>()[0].get();
+    auto xdg_surface  = wmbase->create_xdg_surface(surface);
+    auto xdg_toplevel = xdg_surface.create_xdg_toplevel(towl::Empty{});
 
     // then commit surface changes
     surface.commit();
